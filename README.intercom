@@ -1,0 +1,812 @@
+Here is the README file that came with Grim's intercom code, please pay
+attention to the disclaimer and legal junk sections, but the rest of the
+document should be counted as interest value only, since it has been fully
+incorporated into SensiSummink, and can be enabled/disabled using the 
+config script using 'make config' in the coding directory.
+
+------- Begin README from intercom.tar -------
+
+Intercom server.
+Original Author: Michael Simms (aka Grim)
+Contact: msimms@ulibnet.mtsu.edu
+
+This is the intercom server README file. Please follow the instructions
+contained herein to install the server.
+
+NOTE: This server is built for use with ew-too talkers, however if you
+are a NUTS or other talker coder, there is no reason why the existing
+protocols cannot be transferred to your talker. If you do port this to
+a new type of talker, please mail the new source, complete with FULL readme 
+file to msimms@ulibnet.mtsu.edu
+
+The following instructions work for me under Linux 1.2.13 and 2.0.18. There
+is NO guarentee it will work for any other platform, or indeed for any other
+user so if it doesnt work, please by all means mail me for help, but dont
+expect a speedy response. For those of you who code C well enough to look
+into the code, please make the note: YES, its a mess, its not designed to
+be efficient or to be pretty. Its designed to fit into existing EW-too
+talkers with the MINIMUM upheaval in the existing code. I could have
+written the whole code more neatly, and a LOT more efficiently, but it would
+NOT have been generic enough to be easilly installable.
+
+My reccomendation is: Do this addition in a coding version of your talker,
+not in the source code of the live and running talker. Check it
+all works, and THEN and ONLY then transfer it across. If you dont, and you
+screw up your talker, then its not MY problem.
+
+disclaimer: I accept NO responsibility in ANY way for ANYTHING that goes
+wrong to anyone or anything due to use or misuse or any other event, relating
+to this program. By downloading or installing this code, you agree to
+this disclaimer, and if you dont, then please delete the code now.
+
+LICENCE:
+By installing this program, you agree that superusers, or their equivalents
+on the talker it is being installed onto, will do all that is reasonable
+to ensure no rules are broken on a remote talker, via the intercom. This
+includes, but is not limited to, advertising any talker, or harrassment
+of any user. Any talker found abusing this facility, with the support of the
+talker administrators, will be requested to remove their intercom.
+
+This code is FREEWARE, on the condition that nobody else makes a claim
+to being the author, and appropriate mention is mentioned of my name in
+either the MOTD or the help credits of any talker that uses this. Mention
+the name 'Grim' and/or 'Michael Simms' only, no permutations on the above are
+acceptable. In addition, please see the GNU public licence for rules of
+distribution, although in any case where this document clashes with that
+document, in advertising and ownership of the code, assume the version that
+gives more rights to the original author applies, whilst in any liability,
+please assume the version that gives less liability to the original
+author applies.
+
+Now we are through the junk above, lets get on with the installation. I am
+assuming that you are installing to a pretty standard ew-too code. The
+code included assumes you have  the following functions in your talker.
+
+char *end_string(char *);
+list_ent *find_list_entry(player *,const char *);
+player *find_player_global_quiet(char *);
+saved_player *find_saved_player(char *);
+void close_only_main_fd(void);
+void do_prompt(player *,const char *);
+void examine(player *,char *);
+void finger(player *,char *);
+void kill_intercom(void);
+void log(const char *,const char *);
+void lower_case(char *);
+void lsu(player *,char *);
+void match_commands(player *,char *);
+void pager(player *,char *,int);
+void sub_command(player *,char *,struct command *);
+void su_wall(char *);
+void su_wall_but(player *,char *);
+void tell_room(room *,char *);
+void tell_room_but(player *,room *,char *);
+void view_sub_commands(player *,struct command *);
+
+If you are not using these functions, you will need to make adjustments
+in intercom_glue.c to ensure compilation.
+
+In the dialogs below, any line with a < at the start, denotes the line is
+already there. Any line with a > after it denotes ADD this line, but
+*DO NOT* add the > itself, only the line after. The < lines are there
+to provide a reverence point only. *NEVER* delete the lines with < unless
+EXPLICITLY told to.
+
+------------------------------------------------------------------------------
+
+There will be four new files in this directory containing C code. these
+are
+
+intercom.h
+intercom.c
+intercom_glue.c
+intercom_glue.h
+
+These should be added to your talkers source directory.
+
+*****NOTE:
+If you use varargs in tell_player, you should uncomment the relavent line near
+the top of intercom.h that mentions #define VARARGS
+varargs for tell_player means that it has the format similar to
+tell_player(p,"%s",msg); rather than tell_player (p,msg);
+*****
+
+*****NOTE:
+If you compile strict ansi, add the definition -DANSI into your Makefile
+line, this will cause intercom_glue.h to use ansi prototyping. If you 
+do not, it will use non-ansi prototyping to make it work with fewer
+changes.
+*****
+
+*****NOTE:
+If you have colours in your talker, change the following line in your
+code to reflect the colours 'turning off' sequence. This should be
+as you would type it in on the talker. If you do NOT have colour code
+in your talker, set this variable to be ""
+
+intercom.h
+
+#define COLOUR_TERMINATOR "^n"
+*****
+
+The following changes also need to be made to the following files.
+
+------------------------------------------------------------------------------
+
+CHANGE TO THE FILE Makefile:
+
+Please read this one carefully, as Makefiles seem to be a stumbling block for
+many people.
+
+Your Makefile should be altered to compile intercom_glue.c along with the
+main program. 
+
+ ****intercom.c should NOT be compiled as part of the main program****
+
+You should compile intercom.c as a separate program, running as the name
+'intercom'. This will compile in the same way as the angel does, so
+if you dont know anything about Makefiles, just copy what it says about
+angel, substituting the word angel for intercom. You will need to
+add also the intercom target to the list of dependencies for all: or
+default: or whatever it is that your Makefile uses to compile the whole
+program. I pulled the Walt Makefile into this distribution so you can
+see how I have done it. However, it is not as simple as the standard EW
+Makefile, so it may not make a lot of sense to you, but feel free to look
+at it.
+
+------------------------------------------------------------------------------
+
+CHANGES TO THE FILE admin.c
+
+In the function lsu(player *p,char *str) ---NOTE PG96 this is in admin2.c
+
+near the top, immediately after the variable declarations, add the following
+lines.
+
+>  if (str && *str =='@')
+>  {
+>    do_intercom_lsu(p,str);
+>    return;
+>  }
+
+------------------------------------------------------------------------------
+
+CHANGES TO THE FILE commands.c
+
+In the function finger(player *p,char *str) --- NOTE PG96 users this is the
+                                               function newfinger() in the
+                                               file examine.c
+
+near the top after the lines
+
+<    tell_player(p,"Format: finger <player>\n");
+<    return;
+<  }
+
+add
+
+>  if (strchr(str,'@'))
+>  {
+>    do_intercom_finger(p,str);
+>    return;
+>  }
+
+In the function examine(player *p,char *str)  --- NOTE PG96 users, this is
+                                                 the function newexamine in
+                                                 the file examine.c
+
+near the top after the lines
+
+<     tell_player(p,"Format: examine <player>\n");
+<     return;
+<  }
+
+add
+
+>  if (strchr(str,'@'))
+>  {
+>    do_intercom_examine(p,str);
+>    return;
+>  }
+
+In the function tell(player *p,char *str)  --- NOTE PG96 users, this is in the
+                                              file talking.c
+
+in the variable initialisation section, add the line
+
+>  char *intercom_pointer;
+
+Then, later, after you see
+
+<    tell_player(p,"Format: tell <player(s)> <msg>\n");
+<    return;
+<  }
+
+add
+
+>  intercom_pointer=strchr(str,'@');
+>  if (intercom_pointer && intercom_pointer < msg)
+>  {
+>    do_intercom_tell(p,str);
+>    stack=oldstack;
+>    return;
+>  }
+
+In the function remote(player *p,char *str)   --- NOTE PG96 users, this is the
+                                                 function remote_cmd in file
+                                                 talking.c
+
+in the variable initialisation section, add the line
+
+>  char *intercom_pointer;
+
+Then, later, where you see
+
+<    tell_player(p,"Format: remote <player(s)> <msg>\n");
+<    return;
+<  }
+
+add
+
+>  intercom_pointer=strchr(str,'@');
+>  if (intercom_pointer && intercom_pointer < msg)
+>  {
+>    do_intercom_remote(p,str);
+>    stack=oldstack;
+>    return;
+>  }
+
+
+In the function check_idle(player *p,char *str)
+
+immediately after the variable initialisations add the following
+
+>    if (str && *str && strchr(str,'@'))
+>      {
+>        do_intercom_idle(p,str);
+>        return;
+>      }
+
+
+In the function say(player *p,char *str)  --- NOTE PG96 users this function is
+                                             in the file talking.c
+
+Near the top of the function, you will see the lines:
+
+<    if ((p->flags & FROGGED) && (p->location != prison))
+<       str = (char *)&msg;
+
+Below this, add the lines
+
+>    if (p->location==intercom_room)
+>      {
+>        do_intercom_say(p,str);
+>        return;
+>      }
+   
+In the function emote(player *p,char *str)  --- NOTE PG96 users this function
+                                               is in the file talking.c
+
+Near the top of the function, you will see the lines:
+
+<    if ((p->flags & FROGGED) && (p->location != prison))
+<       str = (char *)&msg;
+
+Below this, add the lines
+
+>    if (p->location==intercom_room)
+>      {
+>        do_intercom_emote(p,str);
+>        return;
+>      }
+
+In the function think(player *p,char *str)  --- NOTE PG96 users this function
+                                               is newthink in the file 
+                                               talking.c
+
+Near the top of the function, you will see the lines:
+
+<    if ((p->flags & FROGGED) && (p->location != prison))
+<       str = (char *)&msg;
+
+Below this, add the lines
+
+>    if (p->location==intercom_room)
+>      {
+>        do_intercom_think(p,str);
+>        return;
+>      }
+   
+------------------------------------------------------------------------------
+CHANGES TO THE FILE clist.h
+
+At the start of the file, add the following line.
+
+>  #include "intercom_glue.h"
+
+#NOTE If you have compilation problems with this line, you will need to
+#    add the following line ABOVE the one just added.
+>  #include "player.h"
+#But only do this in the event of it telling you about unknown type player *
+#or similar errors.
+
+After the keyroom_list commands and before the room_list commands,
+add the following lines. These may need to be changed to suit several
+types of talker, so these are examples in BASE ew-too. NOTE: My commands
+structure is NOT like this, so it may not be accurate for many people. In fact
+anyone with summink, sensei-summink, or PG code will almost certainly need to
+change this section to suit their talker. 
+
+> struct command intercom_list[] = {
+>    {"add_server",add_intercom_server,LOWER_ADMIN,1,0},
+>    {"announce_move",intercom_site_move,ADMIN,1,0},
+>    {"banish", intercom_banish, SU, 1, 0},
+>    {"banish_name", intercom_banish_name, SU, 1, 0},
+>    {"bar_name", intercom_bar_name, SU, 1, 0},
+>    {"bar", bar_talker, SU, 1, 0},
+>    {"change_alias",intercom_change_alias,LOWER_ADMIN,1,0},
+>    {"change_address",intercom_change_address,LOWER_ADMIN,1,0},
+>    {"change_name",intercom_change_name,LOWER_ADMIN,1,0},
+>    {"change_port",intercom_change_port,LOWER_ADMIN,1,0},
+>    {"close",close_intercom,SU,1,0},
+>    {"commands", view_intercom_commands, BASE, 1, 0},
+>    {"delete_server",delete_intercom_server,LOWER_ADMIN,1,0},
+>    {"hide", intercom_hide, SU, 1, 0},
+>    {"home", intercom_home, 0, 1, 0},
+>    {"list",list_intercom_servers,BASE,1,0},
+>    {"locate",intercom_locate_name,BASE,1,0},
+>    {"open",open_intercom,SU,1,0},
+>    {"ping",intercom_ping,SU, 1, 0},
+>    {"reboot",intercom_reboot,LOWER_ADMIN,1,0},
+>    {"slist",intercom_slist,BASE,1,0},
+>    {"stats",intercom_request_stats,SU,1,0},
+>    {"unbanish_name", intercom_unbanish_name, SU, 1, 0},
+>    {"unbar_name", intercom_unbar_name, SU, 1, 0},
+>    {"unbar",unbar_talker,SU,1,0},
+>    {"unhide", intercom_unhide, SU, 1, 0},
+>    {"update_servers",intercom_update_servers,ADMIN,1,0},
+>    {"version",intercom_version,BASE,1,0},
+>    {0, 0, 0, 0, 0}
+> };
+
+
+Finally, in the main talker section, you will need to add the line
+for the intercom commands list. Look for the line that looks
+very similar to
+
+<  {"ignore",ignore,LIST,1,0},
+
+below this, add the line
+
+>  {"intercom",intercom_command,BASE,1,0},
+
+And remember, THIS ALSO will need changing to suit your talker command list
+style
+
+------------------------------------------------------------------------------
+CHANGES TO THE FILE config.h
+
+Add the following line BELOW where DEFAULT_PORT is defined.
+
+>  #define INTERCOM_PORT (DEFAULT_PORT - 1)
+
+Add the following line below the line defineing SOCKET_PATH
+
+>  #define INTERCOM_SOCKET "out/intercom_socket"
+
+***NOTE: If you do not have an 'out' directory, at the same level as
+***your src and bin directories, you will likely have a junk directory,
+***which should be used in the above line instead. Otherwise, find another
+***suitable directory and use that. The SOCKET_PATH definition line
+***will direct you to a suitable place
+
+Finally, below this, add the following lines. The exact content will
+be dependant on the name of your talker.
+
+>  #define INTERCOM_NAME "Walt"
+>  #define INTERCOM_ABBR "walt"
+
+The INTERCOM_NAME definition should be the FULL name of your talker, and
+the INTERCOM_ABBR definition should be a shortcut, between 3 and 8 letters
+preferably. Make sure you have "" around the name, as shown above, and
+you will also need to use \\ instead of \ ,or \" instead of " in the name
+if they are required (not reccomended).
+
+------------------------------------------------------------------------------
+CHANGES TO THE FILE globals.c
+
+At the top, in the section most likely titled /*Boot thangs*/ add the lines
+
+>  int intercom_fd=-1,intercom_pid,intercom_port,intercom_last;
+>  room *intercom_room;
+
+------------------------------------------------------------------------------
+CHANGES TO THE FILE glue.c
+
+In the function boot(int port)
+look down until you see the line
+
+<  signal(SIGCHLD,sigchld);
+
+followed possibly by 1 or 2 #endif statements.
+
+BELOW this add the line (and thats below the #endifs too)
+
+>  intercom_port = port-1;
+
+In the function main()
+
+On about the third page, after the line
+
+< boot(port);
+
+add the line
+
+> start_intercom();
+
+In the function close_down()
+
+towards the end of the function, *above* the line
+
+< close_down_socket();
+
+Add the line
+
+> kill_intercom();
+
+-------------------------------------------------------------------------------
+CHANGES TO THE FILE lists.c
+
+in the function check_legal_entry(player *p,char *str,int verbose)
+
+Immediately after the variable declarations, insert the following
+
+>    if (*str && strlen(str) > (MAX_NAME-1))
+>      str[MAX_NAME-1]=0;
+
+
+Locate on about the 2nd or 3rd page of the function, the section
+
+<   if (!strcasecmp(str, "everyone"))
+<   {
+<      strcpy(wibble, "everyone");
+<      return wibble;
+<   }
+
+and below it, add
+
+>   if (strchr(str,'@'))
+>     {
+>       strcpy(wibble,str);
+>       return wibble;
+>     }
+
+-------------------------------------------------------------------------------
+CHANGES TO THE FILE player.h
+
+At the end of the file, after where the following line is
+
+<  #ifndef GLOBAL_FILE
+
+add the lines
+
+>  extern int intercom_fd,intercom_pid,intercom_port,intercom_last;
+>  extern room *intercom_room;
+
+-------------------------------------------------------------------------------
+CHANGES TO THE FILE room.c
+
+At the top of the file will be some external variable declarations, including
+one that looks like this
+
+<  extern room         *colony, *comfy, *boot_room;
+
+Below this add the line
+
+>  extern room *intercom_room;
+
+In the function init_rooms()
+Look for the following lines, quite near to the top of this function. Some of
+the exact wording may be different, as in the room file names, but it should
+be recognisable.
+
+<    lf = load_file("files/system.rooms");
+<       init_room("system", lf);
+<    lf = load_file("files/main.rooms");
+<       init_room("main", lf);
+<    lf = load_file("files/boot.rooms");
+<       init_room("boot", lf);
+
+
+Immediately  after this, add the following lines
+
+
+>    lf = load_file("files/intercom.rooms");
+>       init_room("intercom", lf);
+>    intercom_room=convert_room(stdout_player,"intercom.external");
+
+
+In the function look(player *p,char *str)
+
+Right at the bottom of the function, immediately before the final }, add the
+following lines.
+
+>   if (r==intercom_room)
+>     intercom_room_look(p);
+
+
+-------------------------------------------------------------------------------
+CHANGES TO THE FILE socket.c
+
+The location of some of the lines will be hard if you are new to C, due
+to the complex nature of this file.
+
+A New function needs to be added, after the function close_down_socket()
+You will see the lines
+
+<    shutdown(main_descriptor,2);
+<    close(main_descriptor);
+<    return;
+<  }
+
+Below this add the lines
+
+>  void close_only_main_fd(void)
+>  {
+>    close(main_descriptor);
+>    return;
+>  }
+
+In the function scan_sockets(), look for the lines
+
+<   for (scan = flatlist_start; scan; scan = scan->flat_next)
+<   {
+<      if (!((scan->fd < 0) || (scan->flags & PANIC)))
+<    FD_SET(scan->fd, &fset);
+<   }
+
+and after here, add
+
+>   if (intercom_fd > -1)
+>     {
+>       if (intercom_last < time(NULL))
+>         kill_intercom();
+>       else
+>         FD_SET(intercom_fd,&fset);
+>     }
+>   else
+>     intercom_fd=establish_intercom_server();
+
+just a little below that, you will see...
+
+<   for (scan = flatlist_start; scan; scan = scan->flat_next)
+<     if (!(scan->fd <= 0 || scan->flags & (PANIC | INPUT_READY))
+<	 && FD_ISSET(scan->fd, &fset))
+<       get_player_input(scan);
+
+after here, add the lines
+
+>   if (intercom_fd > -1 && FD_ISSET(intercom_fd,&fset))
+>     parse_incoming_intercom();
+
+-------------------------------------------------------------------------------
+CHANGES TO THE FILE tag.c
+
+In the function who(player *p, char *str)
+
+Below the line
+
+<   oldstack = stack;
+
+add the lines
+
+>   if (*str && *str=='@' && *(str+1))
+>     {
+>       do_intercom_who(p,str);
+>       return;
+>     }
+
+-------------------------------------------------------------------------------
+
+CHANGES TO THE FILE intercom_glue.c
+
+THIS needs to be changed for a few types of talker.
+
+PG96 - change the references of p->saved_flags to be p->tag_flags when
+      the line is checking the flag BLOCK_TELLS
+
+PG96 - change the function calls for examine and finger to be
+      newexamine and newfinger respectively
+
+-------------------------------------------------------------------------------
+
+This concludes the code installation. There are several files you need
+to install into certain directories. These are as follows:
+
+Move intercom.doc -> talkerroot/doc/intercom.doc
+Move intercom.help -> talkerroot/doc/intercom.help
+Move intercom.rooms -> talkerroot/files/intercom.rooms
+
+You should now have completed the installation of the intercom.
+You probably want to know how to use it. Well, when you boot,
+the intercom will start automatically.
+
+To connect to other intercoms, start with the following command.
+
+intercom add_server Walt:walt:genesis.skl.com:6969
+
+This will establish a link to Walt. However if there are no superusers to
+validate your talker, the link will register as 'RBLK'. Once a Walt superuser
+has validated your link, its status will change to 'UP'.
+
+NOTE: this does NOT have to be done using Walt as the first connection, however
+as it is the originating site, it is more likely to have a full list of other
+talkers to connect to. If you do NOT wish to connect to Walt, that is entirely
+up to you, and you may connect to any other intercom you wish.
+
+Once your link is UP, use the following command.
+
+intercom update_servers
+
+This will request a list of every talker that the talker you have connected
+to, has in its database. Once you have this list, and have unbarred links
+to all of these talkers you wish to unbar links to, then run
+intercom_update_servers to get a list of all connections that THEY know
+about. This should get you almost every link in the intercom system. The
+intercom can handle approximately 200 links up at any one time. Some systems
+will allow more.
+
+The details will be in the help intercom page on your talker. This is
+installed by copying the file intercom.help into the doc directory of your
+talker.
+
+For superuser and admin commands, look at shelp intercom, which is installed by
+copying the intercom.doc file into the doc directory.
+
+NOTE ON INTERCOM NETTIQUETTE
+
+Please do NOT connect to Walt using your test code. Walt is NOT a testbed
+for everyone elses talkers. To test the intercom, link it between your
+test code and live code, and test between them.
+
+Also, please do not leave unbanished links between your test code and
+live code. Any unbanished link will be transmitted between your
+intercom and everyone elses intercom when they do intercom update_servers
+and will fill up everyone elses database with entries of everyones test codes.
+
+Finally, rules on use. The intercom is NOT to be used to advertise
+between talkers, as this is a severe breach of talker nettiquette.
+
+-------------------------------------------------------------------------------
+
+CHANGES::::::::::::::::::::::::::::::::::
+NOTE: Only apply these changes if you have applied the intercom before the
+date mentioned for that release. The intercom.h file will show the version of
+the release you have. If it doesnt, assume 0.9.0
+To change the code, check the differences between the old and new code,
+and then add them in. If you wish to just overwrite the old intercom files,
+you will lose any changes you made to the files you overwrite.
+
+0.9.1 STABLE
+-----
+9/12 New intercom.h intercom.c intercom_glue.c
+     Added vararg #ifdef VARARGS, this needs to be removed if you use
+     varargs in tell_player.
+
+
+0.9.2 STABLE
+-----
+10/12 New intercom_glue.c intercom.h intercom.doc
+      Added bar_name and unbar_name references to clist.h
+      Added intercom_bar_name and intercom_unbar_name functions to clist.h
+
+0.9.3 STABLE
+-----
+23/12 New intercom_glue.c
+      Added references to intercom_last to player.h and globals.c
+      Fixed non-dying intercom bug.
+
+0.9.4 STABLE
+-----
+27/12 New intercom.c
+      Fixed error of intercom crashing.
+
+0.9.5 STABLE
+-----
+02/01 New intercom_glue.c, intercom.c
+      Added new function close_only_main_fd to socket.c
+      Fixed potential fd problem.
+      Increased portability
+
+0.9.6 UNSTABLE ON BSD PLATFORMS
+-----
+15/01 Added intercom_glue.h file. Changed all .h and .c files.
+      Compiled code under gcc -ansi -pedantic for portability issue.
+      Fixed bug in non-validated servers
+      Added in pattern matching for server names in certain situations
+      Added in intercom slist, formatted just like swho is.
+      Fixed signal handler bug
+      Rewrote helpfiles
+
+1.0.0 DO NOT USE, NON-WORKING AND UNSTABLE
+-----
+22/01 Fixed blocking connect() problem.
+      Added intercom hide and intercom unhide to make those nasty test-talker
+     connections go away invisibly.
+      Added unique-server-name functions, to prevent talker name clashes.
+      Alphabetised the database for ease of reading
+      Fixed prototyping of non-ansi intercom_glue.c
+
+1.0.1 DO NOT USE, NON-WORKING BUT STABLE
+-----
+25/01 Fixed bugs in connect() and the main routine.
+
+1.0.2 SECURITY ERROR, IF YOU RUN THIS VERSION PLEASE UPGRADE. STABLE
+-----
+26/01 Fixed bugs in validation, due to new connect() routines.
+
+1.0.3 STABLE
+-----
+27/01 Fixed security issue of version 1.0.2.
+
+1.0.4 STABLE
+-----
+31/01 Changed list ordering of intercom list.
+
+1.0.5 STABLE
+-----
+20/02 Fixed bug in remote to check senders list entries
+      Fixed finger friends@talker bug.
+      Fixed padding error in intercom tell
+      Fixed socket not closing problem
+      Increased reliability of remote connections
+      Improved error messages to users
+      Imropved barring-remote-site authentication
+
+1.0.6 STABLE
+-----
+11/03 Added in intercom version command.
+
+1.0.7 STABLE
+-----
+14/03 Fixed lsu @remote bug *** NOTE THE CHANGE IN THE MAIN CODE lsu() function
+
+1.0.8 STABLE
+-----
+14/03 Fixed stack bug that affected large talkers.
+
+1.0.9 STABLE
+-----
+15/03 Fixed lsu() bug again to make it more backwards compatable.
+
+1.0.10 STABLE
+------
+19/03 Fixed minor errors in network reporting.
+      Fixed error in validation routine.
+
+1.1.0
+-----
+      Made allowances for DNS server errors causing failed lookups
+      Changed intercom.dbase to store by IP address primarily
+      Added server timeouts
+      Altered update_all_servers to only pass on 'UP' servers
+      Fixed bug to disallow multiple manual entries on one address
+      Removed intercom end command as no longer needed from clist.h
+      Added in extra functionality to intercom list command (hidden|up)
+      Removed obsolete list_hidden command
+      Added extra compatability for colour-code cancelling commands
+      Added intercom locate command
+      Added remote idle command
+      Fixed bug with finger me and x me at remote sites.
+      Added intercom room (file intercom.rooms)
+      Added intercom home command
+      Added intercom say facility within the intercom room
+      Added intercom emote facility within the intercom room
+      Added intercom look facility automatically from the intercom_room
+      Added announce_move facility for site admins moving their talkers
+      Added think command functionality in intercom room
+
+1.1.1
+-----
+      Fixed error in gethostbyname where remote nameserver caused reboot.
+

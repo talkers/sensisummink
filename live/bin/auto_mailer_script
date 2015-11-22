@@ -1,0 +1,29 @@
+#!/bin/tcsh -f
+#
+# I really don't know who wrote this, but it was provided by Metatron, and
+# has been edited slightly.
+#
+# Oh, I took the echos out too to make it slightly quicker ;)
+#
+#echo Auto mailer
+#
+#echo usage: COMMAND LIST_OF_NAMES MAIL_FILE SUBJECT
+#
+#echo -n List of names file set to:
+#echo $1
+#echo -n Mail content file set to:
+#echo $2
+#echo -n Subject set to:
+#echo $3
+#
+foreach i (`cat $1`)
+#echo "-=> Doing $i"
+# /bin/cat $2 | /bin/mail -s $3 $i
+elm -s"`cat $3`" $i < $2 
+end
+
+
+#echo "-=> Cult Mailout completed ..." 
+#
+# Tada!
+#

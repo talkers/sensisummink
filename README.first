@@ -1,0 +1,25 @@
+What can I say?  Start with the LICENSE files, then the README.x files,
+looking at MANIFEST to see what each of them is about.
+
+Have fun running this code, and if you wish to mail me for any reason, my
+email address is: james@janus.mersinet.co.uk
+
+The newest version of SensiSummink will always be available from these
+sources:
+
+	My homepage - http://www.sanger.ac.uk/~jg1
+        Mersinet ftp site (ftp.mersinet.co.uk, user anonymous)
+	Surfers ftp site (surfers.org, user anonymous, in pub/src/summink/)
+	Virtual worlds ftp site/web page (http://138.25.6.30/~worlds/)
+
+If anyone else is interested on making it available somewhere, then please
+let me know so this file can be updated.
+
+One last thing, if your talker experiences problems of any kind that are not
+due to strange site quibbles, or due to things -you- have added, then PLEASE
+mail me to let me know what the problem is, so I can check the source files. 
+This includes mailing me any error/stack/bug logs you accrue.
+
+Oh, and I'd like to dedicate this release to my fiancee, Vicky :)
+
+-james/Slaine

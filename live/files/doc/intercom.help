@@ -1,0 +1,45 @@
+The intercom is a way to talk to people on other talkers. All examples
+in this helpfile will use Walt as the target talker.
+
+To see a list of all sites you can communicate with, type
+
+intercom list
+
+    or 
+
+intercom slist
+
+
+To see who is on walt, type:
+
+who @walt
+
+You can use the following other commands as shown.
+
+tell grim@walt hallo
+remote grim@walt grins
+finger grim@walt
+examine grim@walt
+idle grim@walt
+
+From the intercom room, you can talk, and have transmitted the following:
+say
+emote
+think
+
+To go to the intercom room, type
+intercom home
+
+If you wish to stop certain intercom users from talking to you, this can
+be done with the usual ignore or bar commands on your list, like so:
+
+ignore redneck@fh        to ignore specifically redneck on the talker fh
+ignore @resort           to ignore EVERYONE on talker resort
+ignore chris             to ignore the name chris everywhere
+ignore @                 to completely block all intercom communication
+
+
+Sometimes, a link will be VERY slow, and instead of attempting to send the
+message forever, it will be expired. Sometimes, the message has been
+received at the other end, sometimes it hasnt, there is unfortunately no way
+to tell.

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo -n "Daily backup starting at " >> logs/backup.log
+echo `date` >> logs/backup.log
+
+# Get rid of extraneous files
+@
+# The above used to be rm -f files/players/backup_write
+# It should get substituted for a comment or the above line.
+rm -f files/rooms/keys.b
+
+# Now collect all the files together
+tar cf daily-backup.tar files/notes @ files/rooms files/stuff
+# In the above, the at symbol should change to files/players or
+# files/dynamic automagically
+
+# NB, we do *NOT* compress them here as that takes too long, it is done in
+# the other backup script that is run as a seperate process so we don't
+# pause the server for too long.

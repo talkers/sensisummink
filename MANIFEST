@@ -1,0 +1,19 @@
+The files contained in this directory are:
+
+LICENSE			- License information for SensiSummink.
+LICENSE.summinkv1.0	- Original Summink license file.
+LICENSE.ident		- AKA 'COPYRIGHT' from the ident source distribution.
+README.contributors     - Who has helped where (may be incomplete).
+README.first		- Initial information, read it first ;)
+README.gcc_warnings	- Any known and expected compiling warnings, with
+			  their reason (ie not my fault file ;) ).
+README.intercom		- Original readme file from Grim's intercom code.
+README.intercom_sec	- Intercom security notes.
+README.known_bugs	- Any known bugs in the code.
+README.quickstart	- Guess.
+README.robots		- Information on using the robots code addon.
+README.running		- Information on how to run the set up talker.
+README.sensisummink	- What -is- SensiSummink?
+README.setup		- How to set up the sourcecode.
+README.updates		- A list of updates dating from when this was
+			  Summink V1.0.

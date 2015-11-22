@@ -1,0 +1,10 @@
+Eek!  A bug!  Yes - the Angel fails on Irix 6.3, because it can't bind.
+Patches and/or fixes are welcome! :-)
+
+A problem atm is that the ident server will not function is the site is
+multihomed.  This is being worked on by Athanasius, and isn't actually a
+bug at all.
+
+Slaine.
+james@janus.mersinet.co.uk
+http://www.sanger.ac.uk/~jg1

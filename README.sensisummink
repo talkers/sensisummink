@@ -1,0 +1,29 @@
+This version of Summink is 'Sensi-Summink', a version of Summink with many
+more bugfixes, and with a sensible set of compile flags, which necessitated
+the removal of a few thousand error reports.  Yes.  This version was recoded
+with all the warning bells on compile, which found a few -thousand- warnings
+to report on the standard src files.
+
+Also a few of the doc files have been updated somewhat, line number refs
+checked etc.  If you find any bugs please let me know, and please, if you
+start to get entries in stack.log, please mail me your stack log so I can
+fix them.  Please note, that doesn't apply to entries in the log that have
+been caused by new routines you added :)
+
+The Makefiles have been updated somewhat, along with the config files, to
+make it easier to go from coding to live versions.
+
+And before I forget, if you do encounter any compilation problems, please
+let me know what platform you are trying to compile on, version numbers,
+etc, so support for your system (if it happens to be a standard that isn't
+supported, bad configurations don't count) can be added.
+
+** Version 2.0 update - Grim's Intercom code, and Fox's ident server have
+been included as part of the package.  You don't need to read anything for
+the ident server, but taking a look at the README.intercom file might
+be worth your while.
+
+** Version 2.5 update - read the README.updates file!
+
+Slaine (james@janus.mersinet.co.uk)
+       (http://www.sanger.ac.uk/~jg1)

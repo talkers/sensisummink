@@ -1,0 +1,15 @@
+Quickstart Instructions:
+
+1) cd coding/src
+1) edit include/config.h for your system, environment, and required
+   options.
+2) edit Makefile for your system.
+3) make
+4) make install
+5) ../bin/angel &
+
+Oh, and do remember to strip tested binaries when you're happy that your
+program is stable enough to no longer require debug information.
+6) strip ../bin/summink
+
+Have fun :-)

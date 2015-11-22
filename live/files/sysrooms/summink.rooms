@@ -1,0 +1,40 @@
+#
+#	These are comments
+#
+#  rooms take the following form
+#
+#  id
+#  name
+#  enter msg
+#  description, ending with a blank # on a newline
+#  exits, ending with 'end'
+#  auto messages, ending with 'end'
+#
+main
+in the main room.
+goes off to the main room.
+This is the main room of Summink.
+#
+boot.one
+Summink.colony
+end
+end
+#
+colony
+in the nudist colony.
+strips off and enters the nudist colony.
+Welcome to the nudist colony. Here, hidden far away from any of the normal
+prudish nasties you can say anything you like, do what ever you want.
+
+A large, rather battered sign on a post in the sand states:
+PLEASE NOTE.
+  The rules in 'help rules' are relaxed here. Don't do anything _too_
+  offensive. An SU will warn you if you are persistently nasty.
+  BUT if you hassle anyone OUTSIDE this room, they  WILL take the usual
+  action. Please be tolerant and if it's just you who's offended, vote
+  with your feet.
+#
+Summink.main
+end
+end
+#

@@ -1,0 +1,24 @@
+Ok, although this is supposed to be provided as a totally warning free
+compiled piece of code, unfortunately there are a few warnings you may see
+depending on your operating system and version.
+
+1) 
+/usr/include/linux/un.h:15: warning: ANSI C forbids zero-size array 'cmsg_data'
+
+This one is -likely- on most linux machines using the ELF libc headers.  You
+shouldn't actually get it at all, as -ansi isn't enabled in the Makefile, but
+sadly some of the things that should really be checked under -ansi are checked
+under -pedantic.  Newer systems may alternatively see a similar message from
+'sockbits.h'.
+
+2)
+socket.c:131: warning: integer constant is unsigned in ANSI C, signed with
+-traditional
+
+This is a likely warning on Solaris, and the same reason as above applies,
+it should not be checking ansi standards.
+
+Basically, the above two warnings are silly compiler problems, and so can
+and should be ignored.  Thanks to Athanasius for his help on this.
+
+~Slaine

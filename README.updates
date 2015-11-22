@@ -1,0 +1,266 @@
+V1.0 - Summink rewritten to work with lots of nice new compile flags.
+V1.1 - Two common summink crash bugs removed.
+V1.2 - get_int_safe and get_string_safe for easier file additions.
+       Total rewrite of the -awful- convert_room_verbose function.
+       Makefile dependancies cleaned up and fixed, and also now caters for
+	people using machines with 'ELF' libraries.
+       The (incomplete) alleged PC support is now totally removed.  Cheer!
+V1.2a- Fixed a small problem that meant a live make with the standard files
+        didn't actually work (a system room has changed place).
+V1.3 - Fixed the old blocktells bug that I completely forgot about - thanks
+	to Jonathan for reminding me.
+V1.3a- Tiny tiny bugfix, as sigpipe handling has been a little wrong for
+        quite some time in glue.c.  Seems to be a bug dating right back to
+       Surfers and possibly before!
+V2.0 - Grim's Intercom code added (can be deactivated 'make config').
+       Ident server code added by Fox (can be deactivated in 'make config').
+       New matching parser code added, this can also be deactivated in 
+        'make config'.  Basically this means you only give enough of the
+        command name for the program to know what you mean.
+       'commands' has been totally rewritten, to classify commands under
+        type, and also give commands beginning with any letter.
+       IP handling code added, so now commands such as splat, site, etc are
+        subnet dependant, if you dont know what this means then read the
+        'sites' help file.  Along with this are new commands to 'ban'
+        and 'unban' sites, 'vbanish [-]' to view the banished sites file,
+        and 'sitecheck' which does the same thing in a hideously pretty and
+        user friendly way *fear*.  'bedit' is now officially dead.
+       Files moved about quite a bit.  live/files now has new directories,
+        holding the messages, sysrooms, extra files, etc apart, and contains
+        the doc directory.
+       'unsplat' fixed.
+       'vlog' that looks to see what log files are there added.
+       'grep' added to search through the said logs for strings.
+       A possible pager bug removed.
+       Some parts of code rewritten to be more generic.
+       'titled_line' and 'divider_line' functions added, look at these in
+        parse.c.
+       cNO_MATCH flag added for clist.h entries - causes that command to not
+        automatically match, ie you have to type out the full command name.
+       Dynamic playerfiles added, which can be used by answering Y in the
+        right part of 'make config'.  Compiling this is also gives you
+	view_cache, wipe_cache, and sync_cache.
+       Nuke and Banish now require a reason to be given.
+       Src directory now has 'plugins' directory for extras/optional section
+	of program code.  The Configure script also lives there.
+       Config script, use 'make config' - if youve ever compiled the linux
+	kernel, thats what to expect.
+       The list operation command (ie friend, etc) now -FINALLY- work like
+	they were supposed to when they were written, ie they take multi
+	names, and 'off'/'on' at the end.  Thanks to blimey for bugreport.
+       Vararg based 'logs' and 'vtell_player' added to cut down on code
+	replication.. SO far only admin.c has been trawled over with it.
+       Added 'friendblock', 'mailblock', 'blockfriends', 'blockreplies' and
+	'blocklisting' along with 'replytf' and 'ereplytf'.
+       'rm_list' added, finally.
+       You can now 'mail post friends'
+       The news/mail system now cuts down news titles to only include 1
+	"re:" in their header, so you dont end up with: "re re: re your last
+	news post", etc.
+V2.1 - Bug fixed that meant the second set of saved flags were, well..  Not
+	saved, basically ;)  (oops) - Doing this update to V2.0 is dead easy
+	really, you just add lines in load_player and construct_save_data in
+	the main plists.c to load/save p->sflags.
+       Colour support plugin added - the plugin tgz file on it's own also
+	details the above bugfix.
+V2.2 - Text outputting bug in player_flags removed.  Thanks to Ad for
+	telling me about this common ew2 bug.
+       Added -Wnested-externs to the CFLAGS in the Makefile.  This proved
+	uneventful, and can't be bad.
+       Added 'l' to the pager to go to last page, and '?' to get a help page
+	for the pager.  Also added a % of text indicator, and made the
+	prompt nicer.
+       While in the pager normal commands are now possible, except of course
+	further paging or editing.
+V2.2a- Made pager/editor clashes better indicated in error messages.
+       Did an input_fn control trace to eliminate a possible stack bug.
+V2.3 - Repeat (re) command added.
+       Password fail counter added, now users have 3 attempts at typing
+	their password correctly.  Good for hardened spods who can type
+	faster than their ability to type accurately.
+       'backup' command for admin to trigger backups manually.
+       Restructered some more parts of the code.
+       Flags are now checked for 'friends' being a valid thing to set.
+       Noisy/invite/key/inform/beep etc friends now work.
+       'prefer' name added, allows a name to be chosen by default in the
+        case of multiple matches.
+       LIST_FAILS bug fixed.
+       Vararg version of tell_current (vtell_current) added.
+       listscan and listscan_saved added to reduce code replication.
+       'purge_list' added.
+V2.4 - Now works 100% with Solaris.
+       Dynamic playerfiles bugs detected under Solaris running, and removed.
+       Splat updated to work with subnets, this had been forgotten before.
+       Check entry now aligns properly.
+       Anti-spamming code added.
+V2.5 - Removed room/mail mode get out of jail free bugs (thanks to blimey
+	for the bug report).
+       Added socials code (sorry - some people sadly want them).
+       Changed from Fox's ident server to Athanasius' and Oolon's one,
+	because it seems to be better at getting idents, although the code
+	isn't as tidy or compact (from what I read ;) ).
+       Source directory restructured a bit, with an include directory added,
+	plugins removed, configure dir added, and files moved about a bit to
+	reflect actual code includes.  It makes more sense, hopefully ;)
+       Attempted fix of 'read error on player' bugs, which seem to exist in
+	all summink-based (any flavour) talkers, by replacing the
+	telnet_options() function with a better version.
+       Who on login no longer causes 'bad short who' error messages (really
+	this time).
+       'suggest' command added to appease Orion the pedant.
+       Added (-and- stabilised :-) ) ew2 robots code, take a look at the
+	appropriate README file.  Somebody had to do it first ;)
+       List commands updated to cope with 'robots' group list entry so you
+	can ignore them etc, if the ROBOTS define has been compiled in.
+       Pager bug fixed.  Again.
+       Splat subnet dependant version moved from admin.c into ip.c
+       Random disconnect bug worked around.
+V2.6 - Fixed colour_socket.c - this file can be simply plugged into normal
+	other versions of sensisummink with no changes.  Hopefully ;)
+       Column formatting is finally fixed once and for all.
+       antipipe and last_newsb removed from p_struct since they werent used.
+       Fixed some parts of the code to be more generic.
+       Warning are no longer tagged with >
+       Yoyo now works as it should, it didnt set current_player correctly.
+       Fixed quit while in colour mode.
+       Test compile with -O2 resulted in fixes to the dynamic playerfiles.
+        the new version of which should be plugged into any sensisummink
+        as soon as humanely possible.  Other small note is that in admin.c
+        in nuke_player, the if(cached<0) should be if(cached>=0).
+V2.6a- -Tiny- bugfix to process output in colour and non colour versions for
+	mono output.  basically a missing p->column = 0;
+V2.7 - (Unreleased)  Some -nasty- fd problems with 'make' and general summink
+        fd probscleared up.
+V3.0 - Two support routines fully rewritten.
+       'chlim' replaced to be more generic done with one function.
+       'kill_angel' added - stops angel from within talker.
+       Lists functionality improved - redundant routines erased.
+       Main room specification in 'make config' improved.
+       Cult (cult.meep.org 6666) mailsystem added - tags messages as having
+        been read, replied to, etc - also adds snews, sread, and forward.
+       Final editor bug removed.
+       'reset_session' crashbug removed.
+       'privs' crashbug removed.
+       Tidied command output for grant/remove.
+       Socket bug handling improved.
+       Small Cult update to dynamic_plists.c
+       Intercom 1.1.1 installed - edited to allow configuration without
+        intercom room function.
+       Hitells selection on login added, with repeated attempts at continue/
+	end loop.
+       Email address now added to s_struct (sp->saved_email etc), for
+	scanning purposes.
+       Added 'dump_emails' to write email addresses of users out to a file
+	minus validated/invalid/blank/sysroom/robot ones.
+       Autores script included in bin directory, which is now redundant cos:
+       Facility to mail all users from within the talker using standard
+	editor added.
+V3.0a- Fixed a small bug in mail post to friends (recipient and sender were
+        mixed up), and took out an unnecessary pointer from read_sent.  You
+	can copy the mail.c from this version into a 3.0 sensi to update.
+	Thanks to LaTeX for the bugreports.  Also due to the same person, a
+        crashbug removed from the mail code.
+V3.0b- Fixed bug which allowed _silly_ crashing linewrap values to be set,
+	and improved the misleading error reports for dynamic room files.
+V3.0c- Fixed (logically) a reported bug that I've still yet to actually
+	-see- related (reportedly) to resetting of colour on crashing 
+	connections (ie somewhere in the socket code).  Lets hope this fix
+	buries the sod.  Thanks to blimey for tracking it down to a quit
+	loop.
+V3.0d- Fixed the grant/remove crashbugs - but unfortunately I can't remember
+	who pointed them out to me :(  Let me know?
+       Fixed a pfile caching bug in the make command.  Make is happy again.
+       Fixed a **typo** in chlim ;-)
+       Now compiles under glibc linux systems.
+       Removed silly config system - get those editors out.  Also read
+	README.setup.
+V3.1 - Now works with:
+	SunOS 4.3.1
+	Solaris 2.4, 2.5
+	Linux
+	Linux elf
+	Linux glibc
+	OSF1 (Digital Unix) 4.0a-d
+	Irix 5.2, 6.2, 6.3 (broken angel under 6.3)
+	FreeBSD 2.2.1
+       It may work with other versions of some of the above operating
+	systems, and you can choose the generic OS define if you like, but the
+	above are the tested ones.
+       Added find_email command.
+       Added a few support functions (numeric_s etc).
+       Changed email/password setting/saving/quitting code - validated
+	emails etc are now held slightly differently, this needed to be done
+	anyway really but was Irix' fault.  Emails are now always lower case.
+       Made the server ping the angel during startup for very slow systems
+	under dynamic pfiles.
+       Fixed unbanish crashbug (thanks tonhe).
+       Fixed Makefile to work with all architectures (ick).
+       Fixed error in gender prompt (thanks blimey).
+       Removed rubbish kill_angel command in prep. for a new version.
+V3.1a- Improved Makefile - a fault in it meant systems trying to link
+	against libg (defunct in some variants).
+V3.1b- Improved/bugfixed backups system.  Basically the backup scripts didn't
+	work correctly for dynamic playerfile talkers - still trying to back
+	up files/players as opposed to files/dynamic.  At the same time, I
+	decided to get rid of the crontab type backups in favour of a time
+	settable in config.h - it generates the correct backup scripts from
+	two templates that now live in files/stuff.
+V3.1c- Removed global_tag_no_p in favour of updated global_tag.
+       Improved random diconnect bugfix courtesy of Athanasius.
+       Fixed missing global_tag/local_tag behaviour for bad user_lists.
+       Fixed bug in create_note to make sure note ids ARE unique.
+       Fixed bug in reconfigure_received_list - id's could get mangled due to
+        wrong max number.
+       Stopped tagging/etc during crash recovery.
+       Fixed LDFLAGS bug in live Makefile.
+V3.1d- The MAX_INT clashed with a solaris system variable - changed.
+V3.1e- Bug introduced in 3.1c/d - missing brackets on two if statements in
+	include/colour_socket.c caused hitells/colours to break.  grep for
+	CRASH_RECOVERING to fix - note the !sysflags & CRASH_RECOVERING
+	which should by !(sys_flags & CRASH_RECOVERING).  Thanks to suspense
+	for reporting this one.
+       Crashbug for people being nuked while attempting to re-log in fixed,
+	bugreport courtesy of Matt Busigin.
+V3.2 - Some commands removed from people who can't use them anyway (thanks
+	to Redline, I think).
+       Small optimisation to list clearing on resident logoff.
+       Intercom 1.1.2 installed.
+       Double 'cant find room' report from trans killed (bugreport from
+	Redline).
+       Now tested cleanly under FreeBSD 2.2.8.
+       Newconn log = dead. ;-)
+       Memory leak in dynamic playerfiles caching removed (thanks to John
+	Kolesar for spotting that).
+V3.2a- DOH!  Newly occurring socket bugs due to libc changes catered for
+	(it's EAGAIN happening in an all new place ;-) ).
+V3.2b- DOH!  Bugfix for possible memory leak commented out because it caused
+	an awful lot of problems.  Still can't find evidence of leak,
+	either :/
+
+
+I can't think of anything else to put in here.  This is -not- meant to
+provide all the functionality of a normal talker, it's supposed to be a
+basic frame to build yours around.  However, if you can think of anything
+that you consider fundamental, please let me know via mail so it can be
+included - Slaine.
+
+** V2.0 update - It's still just a framework to build on, but it does at
+least now have decent system level stuff in it.
+
+** V2.5 update - Oh dear, sod the framework thing, it's turned into a talker
+in a box - but at least its a stable one ;)
+
+** V3.0d update - Code freeze.  Expect nothing but small bugfixes until 3.1. 
+Shortly after 3.1, I'll be releasing 4.0 alpha - with a highly new and dodgy
+pfile system (again) ;)  Oh, and 3.1 will change the pfiles, but will supply
+an update program, because the changes, although widespread and affecting
+everything, require only slight changes to the actual disk files.  And yes,
+if you updated files to 3.1, 4.0 will be able to convert them ;)
+
+** V3.1 update - Code freeze.  The above is wrong.  3.1 is basically 3.0d
+made to work on more platforms and with some rationalisation of code
+in places.  Expect 4.0 with all new pfiles system 'sometime' in the future.
+
+james@janus.mersinet.co.uk
+http://www.sanger.ac.uk/~jg1
+

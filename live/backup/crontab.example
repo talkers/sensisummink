@@ -1,0 +1,24 @@
+#######################################################################
+#
+# Summink backup setup. See 'man crontab' and 'man 5 crontab'
+# for the format of this file.
+#
+# -Ath
+#
+# NB: Some crontab's don't seem to like ANY blank lines in the
+#     file. So do what I've done and put a single # at the start of
+#     'blank' lines.
+#######################################################################
+# Daily player/room/note file ackups
+5 2 * * * /home/summink/summink/live/backup/trigger.backup
+#
+# Weekly player/room/note file backups
+15 2 * * 0 /home/summink/summink/live/backup/weekly.backup
+#
+# Daily backup of src
+25 2 * * * /home/summink/summink/live/backup/src.backup
+#
+#
+#######################################################################
+#    End of crontab
+#######################################################################

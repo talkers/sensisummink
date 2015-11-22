@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# The directory the backups go in
+BACKUPS=/tmp/summink/backups
+# The suffix of a backup file tar.gz for tar'd and gzip'd files
+SUF=tar.gz
+# Change to the directory The Grange lives in
+cd /home/summink/summink/live
+
+# Now compress the tar file to save disk space
+echo -n "Src backup starting at " >> logs/backup.log
+echo `date` >> logs/backup.log
+
+# Get rid of extraneous files
+rm -f src/#*# src/*~ src/*%
+
+# Now collect all the files together
+tar cfz src-backup.tar.gz src
+chmod ug=rw src-backup.tar.gz
+
+# And move it to somewhere safe...
+
+# First check that the destination directory exists
+if [ ! -d $BACKUPS ]; then
+   mkdir $BACKUPS
+   if [ ! -d $BACKUPS ]; then
+      echo "Backups directory doens't exist, and I couldn't create it:-" \
+         >> logs/backup.log
+      echo "$BACKUPS" >> logs/backup.log
+      exit 1
+   fi
+   echo "Created backup directory:-" >> logs/backup.log
+   echo "$BACKUPS" >> logs/backup.log
+fi
+
+# The first numnber of the list '4 3 2 1' or whatever plus one is the
+# number of daily backups you'll have at any one time (once they're filled)
+for i in 6 5 4 3 2 1
+do
+   if [ -f $BACKUPS/src-backup.$i.$SUF ]; then
+      mv -f $BACKUPS/src-backup.$i.$SUF $BACKUPS/src-backup.`expr $i + 1`.$SUF
+   fi
+done
+
+# cp and rm, not mv, in case we have a dumb mv and we're 'moving' between
+# different file systems.
+cp -a src-backup.$SUF $BACKUPS/src-backup.1.$SUF
+rm src-backup.$SUF
+echo -n "Src backup completed at " >> logs/backup.log
+echo `date` >> logs/backup.log

@@ -1,0 +1,109 @@
+Here is the original setup file, updated slightly in places to point at the
+right parts of the program, with extra notes for SensiSummink where you see
+the ** signs.
+
+==============================================================================
+******************************************************************************
+------------------------------------------------------------------------------
+    MAKE SURE YOU READ THE 'LICENSE' FILE BEFORE RUNNING THIS CODE!!!
+------------------------------------------------------------------------------
+******************************************************************************
+
+Welcome to the EW-Too code in hacked around version used for 'Surfers'.
+I've decided to call it 'Summink' for want of a better phrase *8-P
+This code is 'uptodate' as of about the start of September 1994.
+
+(Its now July 1995, I've fixed a *few* bugs, but lots still exist -Ath)
+
+** (Its now March 1996, and I've fixed mostly all of them - Slaine)
+
+** (Now January 1997, -all- known bugs are dead, many improvements - Slaine)
+
+First off. This code is in *NO* way supported by anybody who has ever coded
+it. You use it entirely at your own risk, and in doing so agree to indemnify
+ALL the people who have contributed coding time against any proceedings that
+may result due to the use or misuse of this code. We are *NOT* responsible!
+
+Having said that, I hope you have fun running this code. But please try and
+get 'official' permission to run it. I'd hate you to get chucked out of uni/
+the sack/put in jail for running this code *8-P.
+
+There are quite a few changes you'll need to make to personalise your talker.
+Chief among these is to edit the rooms files in the files dir, these are:-
+
+       summink.rooms
+       boot.rooms
+       system.rooms
+
+ The rooms that you *must* have are:-
+ 
+   the void
+   the colony
+   the jail
+   the boot room
+   the main room
+   the SU's comfy room
+
+You can change the names of these and the owner names, BUT you *must* update
+the code accordingly otherwise it will crash horribly at bootup or later on
+when someone tries to go to one of the rooms.
+The bits of code to update are:-
+
+ The Void - admin.c line 3357
+            room.c lines 1813,1822,3373
+ The Colony - commands.c line 1546,2957,2977
+	      room.c line 1784
+ The Jail - admin.c line 3864
+            plists.c line 1049
+            room.c lines 1783,3195,3223
+ The Boot room - room.c lines 1789,2601,2604
+ The Main room - include/config.h line 202
+ The SU's comfy room - admin.c 3268
+                       room.c 1785
+
+Of course, if you change the code the line numbers will change...
+There are similar changes to make if you want to change the names of the files.
+
+You will also want to edit the .msg files in the files dir, and all the files
+in the doc directory to personalise them.
+
+Finally there are a few bits of code you'll want to change for the login/out
+messages etc.
+
+** SensiSumminkV3.1 - these are wrong too.
+
+   Login messages - plists.c 1103 and 1106
+   Logout messages - parse.c 758
+
+** SensiSummink V3.0d change **
+You now again need to edit the config.h and Makefile files by hand.  This is
+due to some really shitty OS' (see: irix) that don't like the Makefiles, and
+also people who can't for some reason cope with simple questions ;)  Note
+that config.h now lives in include/config.h - I've stuck enough comments in
+the file for it to be self explanatory.  The line numbers in the sections
+above may well be a couple of lines out now, but I'm doing 3.1 soon(ish) and
+couldn't be bothered to fix it.
+
+And also you may need to play with the Makefile.  There are 2 Makefiles in
+this talker setup, the CODING Makefile, and LIVE Makefile.  The coding one
+is kept in coding/src, and the live one is kept in live/src.  If you do
+happen to change something in one Makefile, (for example compile defs), then
+remember to change it in the other one too.  There are currently 3 defines
+you may need to set in the Makefile.  DONT touch the -DCODING or -DLIVE
+ones, as they are fundamental to it working.
+
+The one thing you WILL want to do is login in as 'admin' straight away, and
+set a password and email address on it. This character is created with 
+FULL admin status, and can be used to grant such status to the characters
+that will actually be running the program.
+
+At some point you'll want to edit all the '.msg' files in the files/messages
+directory to contain the name of YOUR talker and the email address for
+queries.
+
+If you want to do *that* or any other fiddling I suggest you sit down and 
+LEARN the code and how to use gdb (hope your system has it *8-P ).
+
+
+-Athanasius
+** Additons/changed made by Slaine in Jan 97.
